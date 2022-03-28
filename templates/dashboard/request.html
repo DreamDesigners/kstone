@@ -608,6 +608,11 @@
                                   </th>
                                   <th>
                                     <a href="#" class="text-muted list-sort" data-sort="goal-date">
+                                      File
+                                    </a>
+                                  </th>
+                                  <th>
+                                    <a href="#" class="text-muted list-sort" data-sort="goal-date">
                                       Created
                                     </a>
                                   </th>
@@ -629,6 +634,11 @@
                                   </td>
                                   <td class="goal-progress">
                                     <span class="text-success">●</span> {{ asset.doctor_remark }}
+                                  </td>
+                                  <td class="goal-progress">
+                                    <a href="{{ asset.file.url }}">
+                                      View File <i class="fas fa-file-alt"></i>
+                                    </a>
                                   </td>
                                   <td class="goal-date">
                                     <time datetime="2018-10-24">
@@ -671,7 +681,7 @@
                     <div class="row justify-content-center">
                       <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
                         
-                        <a href="{{ asset.file.url }}">
+                        <a href="{% if asset.file %}{{ asset.file.url }}{% endif %}">
                           View File <i class="fas fa-file-alt"></i>
                         </a>
                       </div>

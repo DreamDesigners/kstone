@@ -57,7 +57,7 @@ class Request(models.Model):
 class Asset(models.Model):
     
         request       = models.ForeignKey(Request, on_delete=models.CASCADE)
-        file          = models.FileField(upload_to='asset/%y/%m/%d/', null=True, blank=True)
+        file          = models.FileField(upload_to='asset/%y/%m/%d/')
 
         ignore        = models.BooleanField(default=False)
         created       = models.DateTimeField(auto_now_add=True)

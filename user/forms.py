@@ -35,5 +35,5 @@ class AssetForm(forms.ModelForm):
         ]
 
         widgets = {
-            'file': forms.FileInput(attrs={'class': 'form-control'}),
+            'file': forms.FileInput(attrs={'class': 'form-control', 'required': 'required'}),
         }
