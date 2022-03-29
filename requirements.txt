@@ -5,7 +5,7 @@ charset-normalizer==2.0.9
 cryptography==36.0.1
 defusedxml==0.7.1
 Django==4.0
-django-allauth==0.47.0
+django-allauth
 idna==3.3
 oauthlib==3.1.1
 Pillow==8.4.0
