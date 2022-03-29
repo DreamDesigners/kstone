@@ -1,10 +1,13 @@
 import os
 from django.conf import settings
+from pathlib import Path
+import os
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 def train_model():
     labels = ["Normal", "Stone"]
-    base_dir = os.path.join( settings.BASE_DIR, 'static/data/' )
+    base_dir = os.path.join(BASE_DIR, 'static/data/')
 
     normal_images_dir = os.path.join( base_dir, labels[0] )
     stone_images_dir = os.path.join( base_dir, labels[1] )
@@ -54,14 +57,14 @@ def train_model():
     from keras.layers import Dense, Dropout, Flatten
     from keras import backend as K
     from keras import applications
-    from keras.optimizers import SGD
+    from tensorflow.keras.optimizers import SGD
 
     # build the VGG16 network#layers + optimizer
     batch_size = 32
     import keras_metrics
     metrics= ['categorical_accuracy', keras_metrics.precision(), keras_metrics.recall()]
 
-    base_model = applications.VGG16(weights='imagenet', include_top=False, input_shape = (224, 224, 3))
+    base_model = applications.vgg16.VGG16(weights='imagenet', include_top=False, input_shape = (224, 224, 3))
     x = base_model.output
     x = Flatten(input_shape=base_model.output_shape[1:])(x)
     x = Dense(1024, activation='relu')(x)
@@ -83,24 +86,59 @@ def train_model():
 
     print("model summary: ", model.summary())
 
-    history1=model.fit_generator(    
-        train_generator,
-        steps_per_epoch = train_generator.samples // batch_size,
-        validation_data = validation_generator, 
-        validation_steps = validation_generator.samples // batch_size,
-        class_weight = 'balanced', seed = 1, epochs = 10)
+    # history1=model.fit(    
+    #     train_generator,
+    #     steps_per_epoch = train_generator.samples // batch_size,
+    #     validation_data = validation_generator, 
+    #     validation_steps = validation_generator.samples // batch_size,
+    #     class_weight = 'balanced', epochs = 10)
 
-    from matplotlib import pyplot
+    # from matplotlib import pyplot
 
-    pyplot.plot(history1.history['categorical_accuracy'])
-    pyplot.plot(history1.history['val_categorical_accuracy'])
-    pyplot.title('Training and validation accuracy')
-    pyplot.show()
+    # pyplot.plot(history1.history['categorical_accuracy'])
+    # pyplot.plot(history1.history['val_categorical_accuracy'])
+    # pyplot.title('Training and validation accuracy')
+    # pyplot.show()
 
-    pyplot.plot(history1.history['loss'])
-    pyplot.plot(history1.history['val_loss'])
-    pyplot.title('Training and validation loss')
-    pyplot.show()
+    # pyplot.plot(history1.history['loss'])
+    # pyplot.plot(history1.history['val_loss'])
+    # pyplot.title('Training and validation loss')
+    # pyplot.show()
+
+    #Confution Matrix and Classification Report
+    import numpy as np
+    from sklearn.metrics import classification_report, confusion_matrix
+    Y_pred = model.predict_generator(validation_generator, validation_generator.samples // batch_size+1)
+    y_pred = np.argmax(Y_pred, axis=1)
+    print('Confusion Matrix')
+    print(confusion_matrix(validation_generator.classes, y_pred))
+    print('Classification Report')
+    print(classification_report(validation_generator.classes, y_pred, target_names=labels))
+
+    import h5py
+    model.save_weights(base_dir + 'VGG16_pre_train_weights.h5')
+
+    # save as JSON
+    json_string = model.to_json()
+
+
+
+    for i, layer in enumerate(base_model.layers):
+        print(i, layer.name)
+
+    # we chose to train the first convolution blocks, i.e. we will freeze
+    # the first 24 layers and unfreeze the rest:
+    for layer in model.layers[:15]:
+        layer.trainable = False
+    for layer in model.layers[15:]:
+        layer.trainable = True
+
+    # we need to recompile the model for these modifications to take effect
+    # we use SGD with a low learning rate
+    from keras.optimizers import SGD
+    #metrics= ['categorical_accuracy']
+    model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+    model.summary()
 
 
 train_model()
