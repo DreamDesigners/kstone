@@ -88,9 +88,7 @@ def train_model():
         steps_per_epoch = train_generator.samples // batch_size,
         validation_data = validation_generator, 
         validation_steps = validation_generator.samples // batch_size,
-        class_weight = 'balanced',
-        seed = 1;
-        epochs = 10)
+        class_weight = 'balanced', seed = 1, epochs = 10)
 
     from matplotlib import pyplot
 
