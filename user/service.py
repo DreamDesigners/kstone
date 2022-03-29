@@ -101,3 +101,15 @@ def train_model(prescriptions):
 
 def process(apointment):
     pass
+
+
+
+
+
+
+email  = request.POST.get('email')
+password = request.POST.get('password')
+try:
+    User.objects.create_user(email, password)
+except:
+    user = User.objects.get(email=email)
