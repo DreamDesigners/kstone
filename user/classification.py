@@ -136,7 +136,6 @@ def train_model():
 
     # we need to recompile the model for these modifications to take effect
     # we use SGD with a low learning rate
-    from keras.optimizers import SGD
     #metrics= ['categorical_accuracy']
     model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy', metrics=['categorical_accuracy'])
     model.summary()
