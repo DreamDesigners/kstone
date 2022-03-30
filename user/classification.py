@@ -121,7 +121,8 @@ def train_model():
     # save as JSON
     json_string = model.to_json()
 
-
+    with open(base_dir + 'VGG16_pre_train_model.json', 'w') as json_file:
+        json_file.write(json_string)
 
     for i, layer in enumerate(base_model.layers):
         print(i, layer.name)
@@ -140,5 +141,5 @@ def train_model():
     model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy', metrics=['categorical_accuracy'])
     model.summary()
 
-    
+
 train_model()
