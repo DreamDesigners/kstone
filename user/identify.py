@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 import os
 
 
-def identify_images(image_path):
+def identify_images(base_dir, image_path):
     from keras.models import model_from_json
     from keras.preprocessing import image
     from keras.applications.inception_v3 import preprocess_input
@@ -85,4 +85,4 @@ def identify_images_with_h5_model(base_dir, image_path):
 
 
 base_dir = os.path.join(BASE_DIR, 'static/data/')
-identify_images_with_h5_model(base_dir, base_dir + 'test_1.jpg')
+identify_images(base_dir, base_dir + 'test_1.jpg')
