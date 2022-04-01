@@ -35,4 +35,11 @@ train_path = base_dir + 'train/'
 test_path = base_dir + 'test/'
 valid_path = base_dir + 'val/'
 
-filenames = 
+filenames = os.listdir(train_path)
+filenames = [os.path.join(train_path, f) for f in filenames]
+
+COUNT_NORMAL = os.listdir(train_path + 'Normal/')
+COUNT_NORMAL = [os.path.join(train_path + 'Normal/', f) for f in COUNT_NORMAL]
+COUNT_STONE = os.listdir(train_path + 'Stone/')
+COUNT_STONE = [os.path.join(train_path + 'Stone/', f) for f in COUNT_STONE]
+
