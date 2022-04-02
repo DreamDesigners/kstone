@@ -1,13 +1,13 @@
 from pathlib import Path
 import os
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent
 
 import os
 import re
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-%matplotlib inline
+
 import seaborn as sns
 sns.set_style("whitegrid")
 import warnings
@@ -17,29 +17,30 @@ import glob
 from tensorflow.keras.preprocessing.image import ImageDataGenerator,load_img
 
 
-train_dir = BASE_DIR + 'static/data/train'
-test_dir = BASE_DIR + 'static/data/test'
-val_dir = BASE_DIR + 'static/data/val'
+base_dir = os.path.join(BASE_DIR, 'static/data/')
+train_dir = base_dir + 'train/'
+test_dir = base_dir + 'test/'
+val_dir = base_dir + 'val/'
 
 print("Train set:")
 print("-"*60)
-num_pneumonia = len(os.listdir(os.path.join(train_dir, 'PNEUMONIA')))
-num_normal = len(os.listdir(os.path.join(train_dir, 'NORMAL')))
-print(f"PNEUMONIA={num_pneumonia}")
-print(f"NORMAL={num_normal}")
+num_Stone = len(os.listdir(os.path.join(train_dir, 'Stone')))
+num_normal = len(os.listdir(os.path.join(train_dir, 'Normal')))
+print(f"Stone={num_Stone}")
+print(f"Normal={num_normal}")
 
 print("\nTest set:")
 print('-'*60)
-print(f"PNEUMONIA={len(os.listdir(os.path.join(test_dir, 'PNEUMONIA')))}")
-print(f"NORMAL={len(os.listdir(os.path.join(test_dir, 'NORMAL')))}")
+print(f"Stone={len(os.listdir(os.path.join(test_dir, 'Stone')))}")
+print(f"Normal={len(os.listdir(os.path.join(test_dir, 'Normal')))}")
 
 print("\nValidation set")
 print('-'*60)
-print(f"PNEUMONIA={len(os.listdir(os.path.join(val_dir, 'PNEUMONIA')))}")
-print(f"NORMAL={len(os.listdir(os.path.join(val_dir, 'NORMAL')))}")
+print(f"Stone={len(os.listdir(os.path.join(val_dir, 'Stone')))}")
+print(f"Normal={len(os.listdir(os.path.join(val_dir, 'Normal')))}")
 
-pneumonia = os.listdir("../input/chest-xray-pneumonia/chest_xray/train/PNEUMONIA")
-pneumonia_dir = "../input/chest-xray-pneumonia/chest_xray/train/PNEUMONIA"
+Stone = os.listdir(train_dir + "Stone")
+Stone_dir = train_dir + "Stone"
 
 
 
@@ -47,8 +48,8 @@ plt.figure(figsize=(15, 5))
 
 for i in range(9):
     plt.subplot(3, 3, i + 1)
-    img = plt.imread(os.path.join(pneumonia_dir, pneumonia[i]))
-    plt.title("PNEUMONIA")
+    img = plt.imread(os.path.join(Stone_dir, Stone[i]))
+    plt.title("Stone")
     plt.imshow(img, cmap='gray')
     plt.axis('off')
     
@@ -61,15 +62,15 @@ plt.tight_layout()
 
 
 
-normal = os.listdir("../input/chest-xray-pneumonia/chest_xray/train/NORMAL")
-normal_dir = "../input/chest-xray-pneumonia/chest_xray/train/NORMAL"
+normal = os.listdir(train_dir + "Normal")
+normal_dir = train_dir + "Normal"
 
 plt.figure(figsize=(10, 5))
 
 for i in range(9):
     plt.subplot(3, 3, i + 1)
-    img = plt.imread(os.path.join(pneumonia_dir, pneumonia[i]))
-    plt.title("NORMAL")
+    img = plt.imread(os.path.join(Stone_dir, Stone[i]))
+    plt.title("Normal")
     plt.imshow(img, cmap='gray')
     plt.axis('off')
     
@@ -78,16 +79,16 @@ plt.tight_layout()
 
 import glob
 
-pneumonia_train = glob.glob(train_dir+"/PNEUMONIA/*.jpeg")
-normal_train = glob.glob(train_dir+"/NORMAL/*.jpeg")
+Stone_train = glob.glob(train_dir+"/Stone/*.jpg")
+normal_train = glob.glob(train_dir+"/Normal/*.jpg")
 
 
-data = pd.DataFrame(np.concatenate([[0]*len(normal_train) , [1]*len(pneumonia_train)]),columns=["class"])
+data = pd.DataFrame(np.concatenate([[0]*len(normal_train) , [1]*len(Stone_train)]),columns=["class"])
 
 
 plt.figure(figsize=(15,10))
 sns.countplot(data['class'],data=data,palette='rocket')
-plt.title('PNEUMONIA vs NORMAL')
+plt.title('Stone vs Normal')
 plt.show()
 
 img_Datagen = ImageDataGenerator(
@@ -150,7 +151,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam',metrics=['accuracy'])
 
 model.summary()
 
-history = model.fit(train,epochs=30, 
+history = model.fit(train,epochs=1, 
                     validation_data=validation,
                      steps_per_epoch=100,
 #                     callbacks=[early_stopping],
