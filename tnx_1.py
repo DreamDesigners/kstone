@@ -151,7 +151,7 @@ model.compile(loss='binary_crossentropy', optimizer='adam',metrics=['accuracy'])
 
 model.summary()
 
-history = model.fit(train,epochs=1, 
+history = model.fit(train,epochs=30, 
                     validation_data=validation,
                      steps_per_epoch=100,
 #                     callbacks=[early_stopping],
