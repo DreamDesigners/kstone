@@ -240,3 +240,5 @@ plt.plot(history.history['val_accuracy'], label='Val_Accuracy')
 plt.legend()
 plt.title('Accuracy Evolution')
 
+# save the model to disk
+model.save('model.h5')
