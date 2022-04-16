@@ -50,4 +50,4 @@ def test(test_image=None):
         return prediction[0][0]
 
 
-test(test_image_path)
+#test(test_image_path)
