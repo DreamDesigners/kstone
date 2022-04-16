@@ -70,13 +70,13 @@ class Asset(models.Model):
 
         def doctor_remark(self):
             try:
-                return Remark.objects.filter(asset=self, doctor_remark=True).first().doctor_remark
+                return Remark.objects.filter(asset=self).first().doctor_remark
             except AttributeError:
                 return None
 
         def system_remark(self):
             try:
-                return Remark.objects.filter(asset=self, system_remark=True).first().system_remark
+                return Remark.objects.filter(asset=self).first().system_remark
             except AttributeError:
                 return None
 
@@ -84,11 +84,13 @@ class Asset(models.Model):
 @receiver(post_save, sender=Asset)
 def test_xray_and_update_remark(sender, instance, created, **kwargs):
     if created:
-        status = test(instance.file.path)
+        path = instance.file.path
+        print(path)
+        status = test(path)
         if status > 0.5:
-            Remark.objects.find_or_create(asset=instance, system_remark='Stone')
+            Remark.objects.get_or_create(asset=instance, system_remark='Stone')
         else:
-            Remark.objects.find_or_create(asset=instance, system_remark='Normal')
+            Remark.objects.get_or_create(asset=instance, system_remark='Normal')
 
 
 
@@ -102,4 +104,4 @@ class Remark(models.Model):
         updated       = models.DateTimeField(auto_now=True)
 
         def __str__(self):
-            return str(self.request.user.username) + ' - ' + str(self.doctor.username)
+            return str(self.asset.request.user.username)

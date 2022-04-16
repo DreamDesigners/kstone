@@ -676,27 +676,6 @@
                     </div> <!-- / .row -->
 
 
-                  {% if assets %}
-                    {% for asset in assets %}
-                    <div class="row justify-content-center">
-                      <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
-                        
-                        <a href="{% if asset.file %}{{ asset.file.url }}{% endif %}">
-                          View File <i class="fas fa-file-alt"></i>
-                        </a>
-                      </div>
-                    </div> <!-- / .row -->  
-                    {% endfor %}
-                  {% else %}
-                    <div class="row justify-content-center">
-                      <div class="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
-                        <h6 class="mb-4 text-uppercase text-muted">
-                          No assets found
-                        </h6>
-                      </div>
-                  {% endif %}
-
-
                   <!-- Divider -->
                   <hr class="my-5">
 
