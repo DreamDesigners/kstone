@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 import datetime
 import os
+from user.classification import test
 
 
 class Profile(models.Model):
@@ -78,6 +79,17 @@ class Asset(models.Model):
                 return Remark.objects.filter(asset=self, system_remark=True).first().system_remark
             except AttributeError:
                 return None
+
+
+@receiver(post_save, sender=Asset)
+def test_xray_and_update_remark(sender, instance, created, **kwargs):
+    if created:
+        status = test(instance.file.path)
+        if status > 0.5:
+            Remark.objects.find_or_create(asset=instance, system_remark='Stone')
+        else:
+            Remark.objects.find_or_create(asset=instance, system_remark='Normal')
+
 
 
 class Remark(models.Model):
