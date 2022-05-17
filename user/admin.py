@@ -38,6 +38,7 @@ class RemarkInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Remark'
     fk_name = 'asset'
+    extra = 1
 
 
 class AssetItemAdmin(admin.ModelAdmin):
